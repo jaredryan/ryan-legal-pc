@@ -1,6 +1,5 @@
 'use client'
 
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import { useEffect, useRef, useState, RefObject, ReactNode } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useQueryState } from 'nuqs'
@@ -96,6 +95,8 @@ const renderSideNavItem = (
   toggleOpen: () => void,
   nodeRef: RefObject<null> | null,
   toggleSlide: () => void,
+  setTopic: any,
+  topic: string
 ) => {
   let className
 
@@ -104,7 +105,7 @@ const renderSideNavItem = (
 
   if (title === 'Professional Practice') {
     return (
-      <Tab key={title}>
+      <li key={title}>
         <button
           className="tab neverChosen"
           onClick={(e) => { 
@@ -120,37 +121,56 @@ const renderSideNavItem = (
               : <FontAwesomeIcon icon={faCaretDown} />}
           </div>
         </button>
-      </Tab>
-    )
-  } else if (subSectionHeaders.map(thisHeader => thisHeader.title).includes(title)) {
-    className = !open
-      ? 'hidden'
-      : 'nested'
-
-    return (
-        <Tab key={title}>
-          <CSSTransition 
-            nodeRef={nodeRef}
-            in={open}
-            timeout={1000}
-            classNames="fade-bounce-down"
-            key={title}
-          >
-            <button className={`tab ${className}`} ref={nodeRef} onClick={toggleSlide}>
-              <div className="icon">{icon}</div>
-              <p>{title}</p>
-            </button>
-          </CSSTransition>
-        </Tab>
+      </li>
     )
   } else {
+    const chosenClass = transformTextToUrlParams(title) === topic
+      ? ' chosen'
+      : ''
+
+    if (subSectionHeaders.map(thisHeader => thisHeader.title).includes(title)) {
+      className = !open
+        ? 'hidden'
+        : 'nested'
+
+      return (
+          <li key={title}>
+            <CSSTransition 
+              nodeRef={nodeRef}
+              in={open}
+              timeout={1000}
+              classNames="fade-bounce-down"
+              key={title}
+            >
+              <button
+                className={`tab ${className}${chosenClass}`}
+                ref={nodeRef}
+                onClick={() => {
+                  toggleSlide()
+                  setTopic(transformTextToUrlParams(title))
+                }}
+              >
+                <div className="icon">{icon}</div>
+                <p>{title}</p>
+              </button>
+            </CSSTransition>
+          </li>
+      )
+    }
+
     return (
-      <Tab key={title}>
-        <button className="tab" onClick={toggleSlide}>
+      <li key={title}>
+        <button
+          className={`tab${chosenClass}`}
+          onClick={() => {
+            toggleSlide()
+            setTopic(transformTextToUrlParams(title))
+          }}
+        >
           <div className="icon">{icon}</div>
           <p>{title}</p>
         </button>
-      </Tab>
+      </li>
     )
   }
 }
@@ -184,7 +204,10 @@ export default function Carousel() {
   const searchParams = useSearchParams()
   const initialSlideTopic = searchParams.get('topic')
   const initialExpand = searchParams.get('expand')
-  const [topic, setTopic] = useQueryState('topic', { defaultValue: initialSlideTopic || '' })
+  const [topic, setTopic] = useQueryState('topic', {
+    defaultValue: initialSlideTopic || transformTextToUrlParams(sectionHeaders[0].title),
+    clearOnDefault: false
+  })
   const [expand, setExpand] = useQueryState('expand', { defaultValue: initialExpand === 'true' ? 'true' : 'false' })
   const [open, setOpen] = useState(initialExpand === 'true')
   const [slide, setSlide] = useState<boolean | string>(true)
@@ -213,10 +236,10 @@ export default function Carousel() {
   }
 
   const nodeRefs = {
-    '4': nodeRef5,
-    '5': nodeRef6,
-    '6': nodeRef7,
-    '7': nodeRef8,
+    '5': nodeRef5,
+    '6': nodeRef6,
+    '7': nodeRef7,
+    '8': nodeRef8,
   }
 
   const initialSlideIndex = initialSlideTopic
@@ -249,40 +272,37 @@ export default function Carousel() {
 
   return (
     <div className="aboutCarousel carouselComponent" ref={componentRef}>
-      <Tabs
-        defaultIndex={initialSlideIndex}
-        onSelect={(index: number) => {
-          setTopic(transformTextToUrlParams(sectionHeaders[index].title))
-        }}
-      >
-        {/* <TransitionGroup>
+        <CSSTransition 
+          nodeRef={nodeRefSlideMenu}
+          in={slide === true}
+          timeout={1000}
+          classNames="fade-bounce-left"
+          onExited={() => setSlide(false)}
+        >
+          <ul className="customThumbnails" ref={nodeRefSlideMenu}>
+            {sectionHeaders.map((sectionHeader, index) => renderSideNavItem(
+              sectionHeader,
+              open,
+              toggleOpen,
+              nodeRefs[index.toString() as keyof typeof nodeRefs] || null,
+              () => setSlide('loading'),
+              setTopic,
+              topic
+            ))}
+          </ul>
+        </CSSTransition>
+        <div className="aboutContentContainer">
           <CSSTransition 
-            nodeRef={nodeRefSlideMenu}
-            in={slide === true}
-            timeout={1000}
-            classNames="fade-bounce-left"
-            onExited={() => setSlide(false)}
-          > */}
-            <TabList className="customThumbnails" ref={nodeRefSlideMenu}>
-              {sectionHeaders.map((sectionHeader, index) => renderSideNavItem(
-                sectionHeader,
-                open,
-                toggleOpen,
-                nodeRefs[index.toString() as keyof typeof nodeRefs] || null,
-                () => setSlide('loading')
-              ))}
-            </TabList>
-          {/* </CSSTransition>
-        </TransitionGroup> */}
-        {/* <TransitionGroup> */}
-          {/* <CSSTransition 
             nodeRef={nodeRefSlideDisplay0}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[0].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay0}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[0].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay0}
+            >
                 {GoBackArrow()}
                 <h3>{sectionHeaders[0].title}</h3>
                 <ul className="educationContainer">
@@ -292,17 +312,19 @@ export default function Carousel() {
                     </li>
                   ))}
                 </ul>
-
-            </TabPanel>
-          {/* </CSSTransition>
+            </div>
+          </CSSTransition>
           <CSSTransition 
             nodeRef={nodeRefSlideDisplay1}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[1].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay1}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[1].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay1}
+            >
                 {GoBackArrow()}
                 <h3>{sectionHeaders[1].title}</h3>
                 <h4>Bar Admissions</h4>
@@ -328,16 +350,19 @@ export default function Carousel() {
                   ))}
                 </ul>            
 
-            </TabPanel>
-          {/* </CSSTransition>
+            </div>
+          </CSSTransition>
           <CSSTransition 
             nodeRef={nodeRefSlideDisplay2}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[2].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay2}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[2].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay2}
+            >
                 {GoBackArrow()}
                 {GoBackArrow('bottom')}
                 <h3>{sectionHeaders[2].title}</h3>
@@ -352,16 +377,19 @@ export default function Carousel() {
                   ))}
                 </ul>
 
-            </TabPanel>
-          {/* </CSSTransition>
+            </div>
+          </CSSTransition>
           <CSSTransition 
             nodeRef={nodeRefSlideDisplay4}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[3].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay4}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[3].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay4}
+            >
                 {GoBackArrow()}
                 {GoBackArrow('bottom')}
                 <h3>{sectionHeaders[3].title}</h3>
@@ -373,17 +401,19 @@ export default function Carousel() {
                   ))}
                 </ul>      
 
-            </TabPanel>
-          {/* </CSSTransition> */}
-          <TabPanel />
-          {/* <CSSTransition 
+            </div>
+          </CSSTransition>
+          <CSSTransition 
             nodeRef={nodeRefSlideDisplay5}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[5].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay5}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[5].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay5}
+            >
                 {GoBackArrow('bottom')}
                 {GoBackArrow()}
                 <h3>{sectionHeaders[5].title}</h3>
@@ -391,16 +421,19 @@ export default function Carousel() {
                   {mapExpertise(russKRyanExpertise[0])}
                 </div>
 
-            </TabPanel>
-          {/* </CSSTransition>
+            </div>
+          </CSSTransition>
           <CSSTransition 
             nodeRef={nodeRefSlideDisplay6}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[6].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay6}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[6].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay6}
+            >
                 {GoBackArrow('bottom')}
                 {GoBackArrow()}
                 <h3>{sectionHeaders[6].title}</h3>
@@ -408,32 +441,38 @@ export default function Carousel() {
                   {mapExpertise(russKRyanExpertise[1])}
                 </div>
 
-            </TabPanel>
-          {/* </CSSTransition>
+            </div>
+          </CSSTransition>
           <CSSTransition 
             nodeRef={nodeRefSlideDisplay7}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[7].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay7}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[7].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay7}
+            >
                 {GoBackArrow()}
                 <h3>{sectionHeaders[7].title}</h3>
                 <div className="expertiseContainer">
                   {mapExpertise(russKRyanExpertise[2])}
                 </div>
 
-            </TabPanel>
-          {/* </CSSTransition>
+            </div>
+          </CSSTransition>
           <CSSTransition 
             nodeRef={nodeRefSlideDisplay8}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[8].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay8}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[8].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay8}
+            >
                 {GoBackArrow()}
                 {GoBackArrow('bottom')}
                 <h3>{sectionHeaders[8].title}</h3>
@@ -441,16 +480,19 @@ export default function Carousel() {
                   {mapExpertise(russKRyanExpertise[3])}
                 </div>
 
-            </TabPanel>
-          {/* </CSSTransition>
+            </div>
+          </CSSTransition>
           <CSSTransition 
             nodeRef={nodeRefSlideDisplay9}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[9].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay9}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[9].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay9}
+            >
                 {GoBackArrow()}
                 {GoBackArrow('bottom')}
                 <h3>{sectionHeaders[9].title}</h3>
@@ -465,16 +507,19 @@ export default function Carousel() {
                   ))}
                 </ul>
 
-            </TabPanel>
-          {/* </CSSTransition>
+            </div>
+          </CSSTransition>
           <CSSTransition 
             nodeRef={nodeRefSlideDisplay10}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[10].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay10}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[10].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay10}
+            >
                 {GoBackArrow()}
                 <h3>{sectionHeaders[10].title}</h3>
                 <ul className="serviceContainer">
@@ -485,16 +530,19 @@ export default function Carousel() {
                   ))}
                 </ul>
 
-            </TabPanel>
-          {/* </CSSTransition>
+            </div>
+          </CSSTransition>
           <CSSTransition
             nodeRef={nodeRefSlideDisplay11}
-            in={!slide}
+            in={transformTextToUrlParams(sectionHeaders[11].title) === topic}
             timeout={1000}
             classNames="fade-bounce-left"
             onExited={() => setSlide(true)}
-          > */}
-            <TabPanel className="slide" ref={nodeRefSlideDisplay11}>
+          >
+            <div 
+              className={`slide${transformTextToUrlParams(sectionHeaders[11].title) === topic ? ' chosen' : ''}`}
+              ref={nodeRefSlideDisplay11}
+            >
                 {GoBackArrow('bottom')}
                 {GoBackArrow()}
                 <h3>{sectionHeaders[11].title}</h3>
@@ -521,10 +569,9 @@ export default function Carousel() {
                   ))}
                 </ul>
 
-            </TabPanel>
-          {/* </CSSTransition> */}
-        {/* </TransitionGroup> */}
-      </Tabs>
+            </div>
+          </CSSTransition>
+        </div>
     </div>
   )
 }

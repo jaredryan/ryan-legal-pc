@@ -68,7 +68,7 @@
   width: 300px;
 }
 
-.carouselComponent.aboutCarousel .customThumbnails .slick-active .tab:not(.neverChosen) {
+.carouselComponent.aboutCarousel .customThumbnails .chosen.tab:not(.neverChosen) {
     border: 2px solid var(--primary-color) !important;
 }
 
@@ -228,8 +228,22 @@
 
 
 
+.carouselComponent.aboutCarousel {
+  display: flex;
+  flex-direction: row;
+}
 
-.carouselComponent.aboutCarousel .react-tabs__tab-panel--selected {
-  flex: 1;
+.carouselComponent.aboutCarousel .aboutContentContainer { 
+  display: grid;
+}
+
+.carouselComponent.aboutCarousel .aboutContentContainer > * { 
+  visibility: hidden;
+  grid-column: 1/1;
+  grid-row: 1/1;
+}
+
+.carouselComponent.aboutCarousel .aboutContentContainer > *.chosen { 
+  visibility: visible;
 }
 
