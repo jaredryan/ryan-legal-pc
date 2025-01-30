@@ -46,6 +46,9 @@ importers:
       react-slick:
         specifier: ^0.30.3
         version: 0.30.3(patch_hash=mqs7wfwewmbwvzoezvxikm22xi)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react-tabs:
+        specifier: ^6.1.0
+        version: 6.1.0(react@19.0.0)
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -77,6 +80,9 @@ importers:
       '@types/react-slick':
         specifier: ^0.23.13
         version: 0.23.13
+      '@types/react-tabs':
+        specifier: ^5.0.5
+        version: 5.0.5(react@19.0.0)
       '@types/react-transition-group':
         specifier: ^4.4.12
         version: 4.4.12(@types/react@19.0.8)
@@ -351,6 +357,10 @@ packages:
   '@types/react-slick@0.23.13':
     resolution: {integrity: sha512-bNZfDhe/L8t5OQzIyhrRhBr/61pfBcWaYJoq6UDqFtv5LMwfg4NsVDD2J8N01JqdAdxLjOt66OZEp6PX+dGs/A==}
 
+  '@types/react-tabs@5.0.5':
+    resolution: {integrity: sha512-3CZTmjR7nNrZnYbnxp/DtK5e82mhM22dN47aYObmYLcp9fC1XjIEF0mLzGKFl1fR6/R8X7DyGh9hO6lON6LVkQ==}
+    deprecated: This is a stub types definition. react-tabs provides its own type definitions, so you do not need this installed.
+
   '@types/react-transition-group@4.4.12':
     resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
     peerDependencies:
@@ -428,6 +438,10 @@ packages:
 
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
+
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
 
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -851,6 +865,11 @@ packages:
       react: ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  react-tabs@6.1.0:
+    resolution: {integrity: sha512-6QtbTRDKM+jA/MZTTefvigNxo0zz+gnBTVFw2CFVvq+f2BuH0nF0vDLNClL045nuTAdOoK/IL1vTP0ZLX0DAyQ==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+
   react-transition-group@4.4.5:
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
     peerDependencies:
@@ -1222,6 +1241,12 @@ snapshots:
     dependencies:
       '@types/react': 19.0.8
 
+  '@types/react-tabs@5.0.5(react@19.0.0)':
+    dependencies:
+      react-tabs: 6.1.0(react@19.0.0)
+    transitivePeerDependencies:
+      - react
+
   '@types/react-transition-group@4.4.12(@types/react@19.0.8)':
     dependencies:
       '@types/react': 19.0.8
@@ -1297,6 +1322,8 @@ snapshots:
   classnames@2.5.1: {}
 
   client-only@0.0.1: {}
+
+  clsx@2.1.1: {}
 
   color-convert@2.0.1:
     dependencies:
@@ -1662,6 +1689,12 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       resize-observer-polyfill: 1.5.1
+
+  react-tabs@6.1.0(react@19.0.0):
+    dependencies:
+      clsx: 2.1.1
+      prop-types: 15.8.1
+      react: 19.0.0
 
   react-transition-group@4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:

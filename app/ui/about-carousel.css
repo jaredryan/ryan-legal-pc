@@ -25,7 +25,7 @@
 
 .carouselComponent.aboutCarousel > div {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
 }
 
 .carouselComponent.aboutCarousel .customThumbnails .tab,
@@ -225,3 +225,11 @@
     padding: 50px 0 90px;
   }
 }
+
+
+
+
+.carouselComponent.aboutCarousel .react-tabs__tab-panel--selected {
+  flex: 1;
+}
+
