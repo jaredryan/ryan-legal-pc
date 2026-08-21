@@ -61,8 +61,8 @@ const proofItems = [
       <h1>Practical day-to-day counsel. Strong representation when the stakes are high.</h1>
       <p class="lead">{businessSlogan}</p>
       <div class="hero__actions">
-        <a href="/contact" class="btn btn-primary">Schedule a Consultation</a>
-        <a href="/expertise" class="link-editorial">
+        <a href="/contact/" class="btn btn-primary">Schedule a Consultation</a>
+        <a href="/expertise/" class="link-editorial">
           See areas of practice <span class="link-editorial__arrow" aria-hidden="true">→</span>
         </a>
       </div>
@@ -92,7 +92,7 @@ const proofItems = [
       {
         areasOfPractice.map((area) => (
           <li class="practice-grid__item">
-            <a class="practice-grid__link" href={`/expertise#${area.slug}`}>
+            <a class="practice-grid__link" href={`/expertise/#${area.slug}`}>
               <h3>
                 {area.name}{' '}
                 <span class="practice-grid__arrow" aria-hidden="true">
@@ -122,7 +122,7 @@ const proofItems = [
       <span class="closing-band__rule" aria-hidden="true"></span>
       <h2>Start with a conversation.</h2>
       <p class="lead">Get clear advice on what comes next—and experienced representation when you need it.</p>
-      <a href="/contact" class="btn btn-primary">Request a consultation</a>
+      <a href="/contact/" class="btn btn-primary">Request a consultation</a>
     </div>
   </section>
 </BaseLayout>

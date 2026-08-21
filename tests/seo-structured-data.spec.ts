@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const routes = ['/', '/about', '/contact', '/expertise', '/payment']
+const routes = ['/', '/about/', '/contact/', '/expertise/', '/payment/']
 
 async function readGraph(page: import('@playwright/test').Page) {
   const raw = await page.locator('script[type="application/ld+json"]').textContent()
@@ -45,7 +45,7 @@ for (const route of routes) {
 }
 
 test('About: Crystal Brightwell is a Person, not an Attorney, with her exact title', async ({ page }) => {
-  await page.goto('/about')
+  await page.goto('/about/')
   const graph = await readGraph(page)
 
   const crystal = graph.find((e) => e.name === 'Crystal Brightwell')
@@ -67,7 +67,7 @@ test('About: Crystal Brightwell is a Person, not an Attorney, with her exact tit
 })
 
 test('404: is marked noindex and emits no JSON-LD', async ({ page }) => {
-  const response = await page.goto('/this-route-does-not-exist')
+  const response = await page.goto('/this-route-does-not-exist/')
   expect(response?.status()).toBe(404)
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow')
   await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0)
@@ -76,7 +76,7 @@ test('404: is marked noindex and emits no JSON-LD', async ({ page }) => {
 test('Payment page JSON-LD and visible copy agree on payment methods (no LawPay-ownership implication)', async ({
   page,
 }) => {
-  await page.goto('/payment')
+  await page.goto('/payment/')
   const graph = await readGraph(page)
   // The firm entity isn't emitted on /payment itself — acceptedPaymentMethod
   // lives on the LegalService entity, emitted on Home/Expertise. This test

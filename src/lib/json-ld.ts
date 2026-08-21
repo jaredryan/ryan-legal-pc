@@ -15,13 +15,13 @@ export type JsonLd = Record<string, any>
 // a preview/branch/localhost origin — see SITE_URL in src/data/site.ts):
 //   firm:    `${siteUrl}#RyanLegalPC`
 //   website: `${siteUrl}/#website`
-//   people:  `${siteUrl}/about#<PersonSlug>` (About is their canonical page,
+//   people:  `${siteUrl}/about/#<PersonSlug>` (About is their canonical page,
 //            referenced by @id — never redefined — from other pages)
 //   pages:   `${siteUrl}<path>#webpage`
 export const firmId = `${siteUrl}#RyanLegalPC`
 export const websiteId = `${siteUrl}/#website`
-export const russRyanId = `${siteUrl}/about#RussellRyan`
-export const crystalBrightwellId = `${siteUrl}/about#CrystalBrightwell`
+export const russRyanId = `${siteUrl}/about/#RussellRyan`
+export const crystalBrightwellId = `${siteUrl}/about/#CrystalBrightwell`
 
 const ratingsSimplified = ratingsAndDesignations.map((r) => r.simplified)
 
@@ -146,7 +146,7 @@ export function russRyanPersonJsonLd(): JsonLd {
     alternateName: russRyan.alternateName,
     givenName: russRyan.givenName,
     familyName: russRyan.familyName,
-    url: `${siteUrl}/about`,
+    url: `${siteUrl}/about/`,
     image: `${siteUrl}/square-profile.webp`,
     jobTitle: russRyan.jobTitle,
     honorificSuffix: russRyan.honorificSuffix,
@@ -184,7 +184,7 @@ export function crystalBrightwellPersonJsonLd(): JsonLd {
     '@type': 'Person',
     '@id': crystalBrightwellId,
     name: crystalBrightwell.name,
-    url: `${siteUrl}/about`,
+    url: `${siteUrl}/about/`,
     jobTitle: crystalBrightwell.workingTitle,
     // Tenure is published on About (e.g. "24 years with Russ Ryan") —
     // restating it here doesn't introduce a new claim. Framed around Russ,

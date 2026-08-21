@@ -44,12 +44,12 @@ const jsonLd = [
   russRyanPersonJsonLd(),
   crystalBrightwellPersonJsonLd(),
   webPageJsonLd({
-    path: '/about',
+    path: '/about/',
     name: 'About Ryan Legal, PC',
     description,
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'About', path: '/about' },
+      { name: 'About', path: '/about/' },
     ],
     pageType: 'AboutPage',
     mainEntity: [{ '@id': russRyanId }, { '@id': crystalBrightwellId }],
@@ -94,7 +94,7 @@ function splitHighlight(text: string, highlight?: string): { before: string; mat
 const trainingIntroParts = splitHighlight(trainingIntro, 'more than 150,000 participants')
 ---
 
-<BaseLayout title="About" description={description} path="/about" keywords={keywords} jsonLd={jsonLd} flushFooter>
+<BaseLayout title="About" description={description} path="/about/" keywords={keywords} jsonLd={jsonLd} flushFooter>
   <div class="about-layout">
     <SectionNav items={railSections} railLabel="On this page" jumpLabel="On this page" density="compact" />
 
@@ -105,7 +105,7 @@ const trainingIntroParts = splitHighlight(trainingIntro, 'more than 150,000 part
           <span class="eyebrow">{russRyan.jobTitle}</span>
           <h1>{russRyan.name}</h1>
           {russRyan.summary.map((paragraph) => <p>{paragraph}</p>)}
-          <a href="/contact" class="link-editorial">
+          <a href="/contact/" class="link-editorial">
             Talk with Russ <span class="link-editorial__arrow" aria-hidden="true">→</span>
           </a>
         </div>
@@ -359,7 +359,7 @@ const trainingIntroParts = splitHighlight(trainingIntro, 'more than 150,000 part
       <span class="closing-band__rule" aria-hidden="true"></span>
       <h2>Practical judgment. Proven experience.</h2>
       <p class="lead">From day-to-day advising to trial and appeal, Russ brings both to every stage.</p>
-      <a href="/contact" class="btn btn-primary">Talk with Russ</a>
+      <a href="/contact/" class="btn btn-primary">Talk with Russ</a>
     </div>
   </section>
 </BaseLayout>

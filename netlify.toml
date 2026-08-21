@@ -9,6 +9,12 @@
   directory = "netlify/functions"
 
 [[redirects]]
+  from = "https://ryanlegalpc.netlify.app/*"
+  to = "https://ryanlegalpc.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/api/contact"
   to = "/.netlify/functions/contact"
   status = 200
@@ -23,7 +29,7 @@
 
 [[redirects]]
   from = "/contact-us"
-  to = "/contact"
+  to = "/contact/"
   status = 301
 
 # Site-wide security headers. script-src/style-src need 'unsafe-inline'

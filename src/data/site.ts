@@ -72,8 +72,8 @@ export const lawPayUrl = 'https://secure.lawpay.com/pages/ryanlegalpc/operating'
 
 export const navLinks = [
   { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
-  { name: 'Expertise', href: '/expertise' },
-  { name: 'Contact', href: '/contact' },
-  { name: 'Payment', href: '/payment' },
+  { name: 'About', href: '/about/' },
+  { name: 'Expertise', href: '/expertise/' },
+  { name: 'Contact', href: '/contact/' },
+  { name: 'Payment', href: '/payment/' },
 ] as const

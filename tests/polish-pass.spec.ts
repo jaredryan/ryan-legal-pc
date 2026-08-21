@@ -27,7 +27,7 @@ test('Header brand mark uses logo-white.webp', async ({ page }) => {
 })
 
 test('About: waiting-room photo break sits between Crystal and Litigation Record', async ({ page }) => {
-  await page.goto('/about')
+  await page.goto('/about/')
   const figure = page.locator('.about-photo-break')
   await expect(figure).toBeVisible()
   await expect(figure.locator('img')).toHaveAttribute('src', '/waiting-room.webp')
@@ -48,7 +48,7 @@ test('About: waiting-room photo break sits between Crystal and Litigation Record
 })
 
 test('404 page shows the branded compact layout', async ({ page }) => {
-  const response = await page.goto('/this-route-does-not-exist')
+  const response = await page.goto('/this-route-does-not-exist/')
   expect(response?.status()).toBe(404)
   await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible()
   await expect(page.getByText('The page may have moved, or the address may be incorrect.')).toBeVisible()
@@ -64,7 +64,7 @@ test('404 page shows the branded compact layout', async ({ page }) => {
 })
 
 test('404 page footer sits flush against the compact content (no margin gap)', async ({ page }) => {
-  await page.goto('/this-route-does-not-exist')
+  await page.goto('/this-route-does-not-exist/')
   const gap = await page.evaluate(() => {
     const main = document.querySelector('main')
     const footer = document.querySelector('.site-footer')
@@ -81,7 +81,7 @@ test('Footer/header brand links expose correct accessible names, About applies t
   await expect(page.locator('footer').getByRole('link', { name: 'Ryan Legal, PC — Home', exact: true })).toBeVisible()
   await expect(page.locator('header').getByRole('link', { name: 'Ryan Legal, PC', exact: true })).toBeVisible()
 
-  await page.goto('/about')
+  await page.goto('/about/')
   // Training now mixes widths like Admissions/Clients & Affiliations do: the
   // section itself is wide (its "Training at a glance" grid needs the room
   // for three columns), while the intro paragraph and the selected-experience
@@ -219,13 +219,13 @@ test('Home practice-area links underline correctly, including a wrapped title', 
 })
 
 test('Expertise page H1 reads "Areas of Practice" while the navbar keeps "Expertise"', async ({ page }) => {
-  await page.goto('/expertise')
+  await page.goto('/expertise/')
   await expect(page.locator('h1')).toHaveText('Areas of Practice')
   // A plain DOM/text locator rather than getByRole: at mobile widths the nav
   // (both the desktop bar and the closed disclosure menu) is display:none,
   // which removes it from the accessibility tree entirely — getByRole would
   // report "not found" there even though the label text itself is unaffected.
-  await expect(page.locator('header a[href="/expertise"]').first()).toHaveText('Expertise')
+  await expect(page.locator('header a[href="/expertise/"]').first()).toHaveText('Expertise')
 })
 
 test('Home, Expertise, and About closing bands: flush footer, correct CTA, and excluded from the rail/scroll-spy', async ({
@@ -233,14 +233,14 @@ test('Home, Expertise, and About closing bands: flush footer, correct CTA, and e
 }) => {
   const ctaLabel = (path: string) => {
     if (path === '/') return 'Request a consultation'
-    return path === '/expertise' ? 'Discuss your needs' : 'Talk with Russ'
+    return path === '/expertise/' ? 'Discuss your needs' : 'Talk with Russ'
   }
-  for (const path of ['/', '/expertise', '/about']) {
+  for (const path of ['/', '/expertise/', '/about/']) {
     await page.goto(path)
     const band = page.locator('.closing-band')
     await expect(band).toBeVisible()
     const cta = band.getByRole('link', { name: ctaLabel(path) })
-    await expect(cta).toHaveAttribute('href', '/contact')
+    await expect(cta).toHaveAttribute('href', '/contact/')
 
     // Flush transition into the footer — Home, Expertise, and About all
     // share this one class now (see src/styles/global.css .closing-band).
@@ -260,17 +260,17 @@ test('Home, Expertise, and About closing bands: flush footer, correct CTA, and e
   }
 
   // Expertise: rail still lists exactly the six practice areas (no extra item for the band).
-  await page.goto('/expertise')
+  await page.goto('/expertise/')
   await expect(page.locator('.section-nav-rail li')).toHaveCount(6)
 
   // About: rail still lists exactly its original eight sections.
-  await page.goto('/about')
+  await page.goto('/about/')
   await expect(page.locator('.section-nav-rail li')).toHaveCount(8)
 })
 
 test("Closing-band CTA focus rings match Home's ivory/gold-ink pattern in both themes", async ({ page }) => {
-  const ctaLabel = (path: string) => (path === '/expertise' ? 'Discuss your needs' : 'Talk with Russ')
-  for (const path of ['/expertise', '/about']) {
+  const ctaLabel = (path: string) => (path === '/expertise/' ? 'Discuss your needs' : 'Talk with Russ')
+  for (const path of ['/expertise/', '/about/']) {
     await page.goto(path)
     // Reset explicitly — localStorage persists across goto() within a test,
     // so without this the second iteration would inherit 'dark' from the
@@ -293,7 +293,7 @@ test("Closing-band CTA focus rings match Home's ivory/gold-ink pattern in both t
 })
 
 test('Contact info column carries the new eyebrow and stays visually distinct from the form', async ({ page }) => {
-  await page.goto('/contact')
+  await page.goto('/contact/')
   const info = page.locator('.contact-main__info')
   await expect(info.locator('.eyebrow')).toHaveText('Reach us directly')
   await expect(page.getByRole('heading', { level: 2, name: 'Send a message' })).toBeVisible()
@@ -307,15 +307,15 @@ test('Home, About, and Expertise closing CTAs carry page-specific copy, and Abou
   await expect(homeClose.locator('.lead')).toHaveText(
     'Get clear advice on what comes next—and experienced representation when you need it.',
   )
-  await expect(homeClose.getByRole('link', { name: 'Request a consultation' })).toHaveAttribute('href', '/contact')
+  await expect(homeClose.getByRole('link', { name: 'Request a consultation' })).toHaveAttribute('href', '/contact/')
 
-  await page.goto('/about')
+  await page.goto('/about/')
   const aboutClose = page.locator('.closing-band')
   await expect(aboutClose.getByRole('heading', { name: 'Practical judgment. Proven experience.' })).toBeVisible()
   await expect(aboutClose.locator('.lead')).toHaveText(
     'From day-to-day advising to trial and appeal, Russ brings both to every stage.',
   )
-  await expect(aboutClose.getByRole('link', { name: 'Talk with Russ' })).toHaveAttribute('href', '/contact')
+  await expect(aboutClose.getByRole('link', { name: 'Talk with Russ' })).toHaveAttribute('href', '/contact/')
 
   const training = page.locator('#training')
   await expect(training.locator('p').first()).toContainText('more than 150,000 participants')
@@ -333,13 +333,13 @@ test('Home, About, and Expertise closing CTAs carry page-specific copy, and Abou
   await expect(experience.getByText('Council on Education in Management')).toBeVisible()
   await expect(experience.getByText('Client training')).toBeVisible()
 
-  await page.goto('/expertise')
+  await page.goto('/expertise/')
   const expClose = page.locator('.closing-band')
   await expect(expClose.getByRole('heading', { name: "Let's find the right next step." })).toBeVisible()
   await expect(expClose.locator('.lead')).toHaveText(
     'Get clear guidance on your options—before a decision, during a dispute, or in court.',
   )
-  await expect(expClose.getByRole('link', { name: 'Discuss your needs' })).toHaveAttribute('href', '/contact')
+  await expect(expClose.getByRole('link', { name: 'Discuss your needs' })).toHaveAttribute('href', '/contact/')
 })
 
 test("Home Values & Mission (replacing the old record/quote sections) and About's rebuilt Crystal section hold up at phone, tablet, and desktop widths", async ({
@@ -365,7 +365,7 @@ test("Home Values & Mission (replacing the old record/quote sections) and About'
     await expect(paragraphs.last()).toContainText('a simple but powerful mission')
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(viewport.width)
 
-    await page.goto('/about')
+    await page.goto('/about/')
     const crystal = page.locator('#crystal')
     await expect(crystal.getByRole('heading', { level: 2, name: 'Crystal Brightwell' })).toBeVisible()
     await expect(crystal.locator('.about-crystal__meta')).toContainText('Senior Paralegal / Office Administrator')

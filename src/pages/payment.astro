@@ -14,18 +14,18 @@ const keywords = [
 
 const jsonLd = [
   webPageJsonLd({
-    path: '/payment',
+    path: '/payment/',
     name: 'Make a Payment to Ryan Legal, PC',
     description,
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Payment', path: '/payment' },
+      { name: 'Payment', path: '/payment/' },
     ],
   }),
 ]
 ---
 
-<BaseLayout title="Payment" description={description} path="/payment" keywords={keywords} jsonLd={jsonLd}>
+<BaseLayout title="Payment" description={description} path="/payment/" keywords={keywords} jsonLd={jsonLd}>
   <section class="page-section payment-section">
     <div class="page-hero">
       <span class="eyebrow">Payment</span>

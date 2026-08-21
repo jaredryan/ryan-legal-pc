@@ -2,10 +2,10 @@ import { expect, test } from '@playwright/test'
 
 const routes: { path: string; heading: string }[] = [
   { path: '/', heading: 'Practical day-to-day counsel' },
-  { path: '/expertise', heading: 'Areas of Practice' },
-  { path: '/about', heading: 'Russell K. Ryan' },
-  { path: '/contact', heading: 'Start a conversation' },
-  { path: '/payment', heading: 'LawPay' },
+  { path: '/expertise/', heading: 'Areas of Practice' },
+  { path: '/about/', heading: 'Russell K. Ryan' },
+  { path: '/contact/', heading: 'Start a conversation' },
+  { path: '/payment/', heading: 'LawPay' },
 ]
 
 for (const route of routes) {
@@ -23,7 +23,7 @@ for (const route of routes) {
 }
 
 test('404 page renders for an unknown route', async ({ page }) => {
-  const response = await page.goto('/this-route-does-not-exist')
+  const response = await page.goto('/this-route-does-not-exist/')
   expect(response?.status()).toBe(404)
   await expect(page.locator('h1')).toContainText('Page not found')
 })
@@ -48,7 +48,7 @@ test('primary navigation reaches every page', async ({ page }) => {
 })
 
 test('contact form renders required fields (no submission — avoid sending real email)', async ({ page }) => {
-  await page.goto('/contact')
+  await page.goto('/contact/')
   for (const field of ['name', 'phone', 'email', 'description']) {
     await expect(page.locator(`#${field}`)).toBeVisible()
   }
@@ -58,7 +58,7 @@ test('contact form renders required fields (no submission — avoid sending real
 test('contact heading/disclaimer read correctly and rail active-state updates on click', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
 
-  await page.goto('/contact')
+  await page.goto('/contact/')
   await expect(page.getByRole('heading', { level: 2, name: 'Send a message' })).toBeVisible()
   const infoTitles = await page.locator('.contact-block__title').allTextContents()
   expect(infoTitles).toEqual(['Russ Ryan', 'Crystal Brightwell', 'Phone', 'Office'])
@@ -66,7 +66,7 @@ test('contact heading/disclaimer read correctly and rail active-state updates on
     page.getByText('Contacting the office does not by itself create an attorney-client relationship.'),
   ).toBeVisible()
 
-  await page.goto('/expertise')
+  await page.goto('/expertise/')
   const railLinks = page.locator('.section-nav-rail a')
   await expect(railLinks.first()).toHaveAttribute('aria-current', 'location')
   await railLinks.nth(2).click()

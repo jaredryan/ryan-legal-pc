@@ -22,12 +22,12 @@ const keywords = [
 const jsonLd = [
   legalServiceJsonLd(),
   webPageJsonLd({
-    path: '/expertise',
+    path: '/expertise/',
     name: 'Ryan Legal, PC Expertise',
     description,
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Expertise', path: '/expertise' },
+      { name: 'Expertise', path: '/expertise/' },
     ],
   }),
 ]
@@ -36,7 +36,7 @@ const jsonLd = [
 <BaseLayout
   title="Expertise"
   description={description}
-  path="/expertise"
+  path="/expertise/"
   keywords={keywords}
   jsonLd={jsonLd}
   flushFooter
@@ -56,7 +56,7 @@ const jsonLd = [
         <p class="lead">
           Six practice areas, one attorney handling each matter directly — from day-to-day advising to trial and appeal.
         </p>
-        <a href="/contact" class="link-editorial">
+        <a href="/contact/" class="link-editorial">
           Not sure where you fit? Ask Russ directly <span class="link-editorial__arrow" aria-hidden="true">→</span>
         </a>
       </section>
@@ -84,7 +84,7 @@ const jsonLd = [
       <span class="closing-band__rule" aria-hidden="true"></span>
       <h2>Let's find the right next step.</h2>
       <p class="lead">Get clear guidance on your options—before a decision, during a dispute, or in court.</p>
-      <a href="/contact" class="btn btn-primary">Discuss your needs</a>
+      <a href="/contact/" class="btn btn-primary">Discuss your needs</a>
     </div>
   </section>
 </BaseLayout>

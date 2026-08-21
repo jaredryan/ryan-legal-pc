@@ -55,7 +55,7 @@ export const areasOfPractice: PracticeArea[] = [
       label: 'Training delivered',
       body: 'More than 150,000 participants trained on employment law topics, in English and Spanish, over three decades.',
       linkLabel: 'See the training record',
-      linkHref: '/about#training',
+      linkHref: '/about/#training',
     },
   },
   {
@@ -80,7 +80,7 @@ export const areasOfPractice: PracticeArea[] = [
       label: 'Compliance training delivered',
       body: 'More than 100 training sessions for employees, physicians, and boards across dozens of California clinics, covering HIPAA, compliance, and workplace conduct.',
       linkLabel: 'See the training record',
-      linkHref: '/about#training',
+      linkHref: '/about/#training',
     },
   },
   {
@@ -100,7 +100,7 @@ export const areasOfPractice: PracticeArea[] = [
       label: 'Trial record',
       body: 'More than 150 major hearings, arbitrations, and jury trials to conclusion, prevailing in at least 90% of those cases.',
       linkLabel: 'See the litigation record',
-      linkHref: '/about#litigation-record',
+      linkHref: '/about/#litigation-record',
     },
   },
   {
@@ -119,7 +119,7 @@ export const areasOfPractice: PracticeArea[] = [
       label: 'Teaching credential',
       body: 'Adjunct professor of commercial and secured transactions law for eight years at San Joaquin College of Law.',
       linkLabel: 'See prior positions',
-      linkHref: '/about#positions',
+      linkHref: '/about/#positions',
     },
   },
   {
@@ -162,7 +162,7 @@ export const areasOfPractice: PracticeArea[] = [
       label: 'Reported decisions',
       body: 'Nine reported appellate decisions, including Church v. Jamison, which changed how California employers accrue vacation pay.',
       linkLabel: 'See reported decisions',
-      linkHref: '/about#litigation-record',
+      linkHref: '/about/#litigation-record',
     },
   },
 ]
