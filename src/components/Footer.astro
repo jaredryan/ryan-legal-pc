@@ -200,5 +200,17 @@ const fullAddress = `${address.street}, ${address.suite}, ${address.city}, ${add
          in is no longer pinned to the page's standard left padding. */
       width: max-content;
     }
+
+    /* Fills the grid track's width (set by the widest block above) instead
+       of shrinking to its own content — lets the CTA below span edge to
+       edge with the rest of the stacked column. */
+    .site-footer__contact {
+      justify-self: stretch;
+    }
+
+    .site-footer__cta {
+      align-self: stretch;
+      width: 100%;
+    }
   }
 </style>
