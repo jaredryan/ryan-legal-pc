@@ -18,10 +18,11 @@ interface Props {
 }
 
 // Layout: width, padding, and type rhythm follow About's narrow profile
-// column (.about-narrow: --content-narrow); the header follows Russ's
-// profile hierarchy (eyebrow → H1 in the name's role) with Expertise's .lead
-// deck beneath it. Single centered column, so .page-hero handles the <900px
-// centering the same way Privacy/Payment do.
+// column (.about-narrow: --content-narrow); the header uses the same
+// meta/title/summary styles as the /news/ list (.news-* in global.css).
+// Unlike other pages' intros, the header deliberately skips .page-hero's
+// <900px centering: everything stays left-aligned at every width, the way
+// news outlets set articles and the way the /news/ list entries already read.
 const { article } = Astro.props
 const path = newsArticlePath(article)
 const description = newsArticleDescription(article)
@@ -60,24 +61,21 @@ const jsonLd = [
   }}
 >
   <div class="page-section page-section--narrow news-article">
-    <nav aria-label="Breadcrumb" class="news-breadcrumb">
-      <ol>
-        <li><a href="/news/">News</a></li>
-        <li><span aria-current="page">{article.title}</span></li>
-      </ol>
-    </nav>
+    <p class="news-article__up">
+      <a href="/news/" class="news-article__back" aria-label="Back to News">
+        <span class="link-editorial__arrow" aria-hidden="true">←</span>News
+      </a>
+    </p>
 
     <article>
-    <header class="page-hero news-article__header">
-      <p class="eyebrow news-article__eyebrow">
-        <span>{article.type}</span>
-        <span class="news-article__sep" aria-hidden="true">·</span>
-        <time class="news-article__date" datetime={article.datePublished}
-          >{formatNewsDate(article.datePublished)}</time
-        >
+    <header class="news-article__header">
+      <p class="news-meta news-article__meta">
+        <span class="news-meta__type">{article.type}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={article.datePublished}>{formatNewsDate(article.datePublished)}</time>
       </p>
-      <h1>{article.title}</h1>
-      <p class="lead">{article.summary}</p>
+      <h1 class="news-title">{article.title}</h1>
+      <p class="news-summary">{article.summary}</p>
       {
         article.dateModified && (
           <p class="news-article__updated">
@@ -134,44 +132,14 @@ const jsonLd = [
 </BaseLayout>
 
 <style>
-  .news-breadcrumb {
-    margin-bottom: var(--s6);
-  }
-
-  .news-breadcrumb ol {
-    display: flex;
-    gap: var(--s2);
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  .news-article__up {
+    margin: 0 0 var(--s6);
     font-size: 0.9375rem;
-    color: var(--fg-soft);
-  }
-
-  /* One line only: "News /" never shrinks, and a headline too long for the
-     row truncates with an ellipsis. The full title stays in the DOM, so
-     screen readers still read it in full — and it's the H1 right below. */
-  .news-breadcrumb li {
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
-
-  .news-breadcrumb li + li {
-    flex-shrink: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .news-breadcrumb li + li::before {
-    content: '/' / '';
-    margin-right: var(--s2);
-    color: var(--rule);
   }
 
   /* Quiet at rest (soft body color, no underline); the same transparent →
      gold underline as .link-editorial on hover/focus. */
-  .news-breadcrumb a {
+  .news-article__up a {
     color: var(--fg-soft);
     font-weight: 600;
     text-decoration-line: underline;
@@ -183,24 +151,10 @@ const jsonLd = [
       text-decoration-color var(--transition-fast);
   }
 
-  .news-breadcrumb a:hover,
-  .news-breadcrumb a:focus-visible {
+  .news-article__up a:hover,
+  .news-article__up a:focus-visible {
     color: var(--fg);
     text-decoration-color: var(--gold);
-  }
-
-  /* Same order and colors as the /news/ list's meta line: content type in
-     the eyebrow's gold-ink, date in the soft body color. */
-  .news-article__eyebrow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s2);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .news-article__sep,
-  .news-article__date {
-    color: var(--fg-soft);
   }
 
   .news-article__updated {
@@ -210,7 +164,6 @@ const jsonLd = [
 
   .news-article__pdf {
     display: inline-block;
-    margin-top: var(--s2);
   }
 
   /* A plain hairline between header and body — structural, so it uses the
@@ -260,15 +213,5 @@ const jsonLd = [
   .news-article__back:hover .link-editorial__arrow,
   .news-article__back:focus-visible .link-editorial__arrow {
     transform: translateX(-3px);
-  }
-
-  @media (max-width: 899px) {
-    .news-breadcrumb ol {
-      justify-content: center;
-    }
-
-    .news-article__eyebrow {
-      justify-content: center;
-    }
   }
 </style>

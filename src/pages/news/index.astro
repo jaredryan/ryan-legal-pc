@@ -35,17 +35,17 @@ const jsonLd = [
           {sortedNewsArticles.map((article) => (
             <li class="news-list__item">
               <article>
-                <p class="news-list__meta">
-                  <span class="news-list__type">{article.type}</span>
-                  <span class="news-list__sep" aria-hidden="true">
+                <p class="news-meta">
+                  <span class="news-meta__type">{article.type}</span>
+                  <span aria-hidden="true">
                     ·
                   </span>
                   <time datetime={article.datePublished}>{formatNewsDate(article.datePublished)}</time>
                 </p>
-                <h2 class="news-list__title">
+                <h2 class="news-title news-list__title">
                   <a href={newsArticlePath(article)}>{article.title}</a>
                 </h2>
-                <p class="news-list__summary">{article.summary}</p>
+                <p class="news-summary">{article.summary}</p>
                 {/* Visual cue only: the headline link above is stretched
                     over the whole item, so this is a styled span (same
                     .link-editorial markup as Home's "See areas of practice")
@@ -88,33 +88,6 @@ const jsonLd = [
     border-radius: 2px;
   }
 
-  /* Small-caps metadata line — same type treatment as .eyebrow: content
-     type first in the eyebrow's gold-ink, date after it in the soft body
-     color. Article pages use the same order and colors. */
-  .news-list__meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--s2);
-    margin: 0 0 var(--s3);
-    font-weight: 700;
-    font-size: 0.8125rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-soft);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .news-list__type {
-    color: var(--gold-ink);
-  }
-
-  .news-list__title {
-    font-size: clamp(1.375rem, 1.25rem + 0.5vw, 1.625rem);
-    line-height: 1.25;
-    margin-bottom: var(--s3);
-  }
-
   /* Headline link stays plain heading text — the "Read …" cue below is
      the item's single hover/focus signal. */
   .news-list__title a {
@@ -143,11 +116,6 @@ const jsonLd = [
   .news-list__item:hover .news-list__cta .link-editorial__arrow,
   .news-list__item:has(.news-list__title a:focus-visible) .news-list__cta .link-editorial__arrow {
     transform: translateX(3px);
-  }
-
-  .news-list__summary {
-    color: var(--fg-soft);
-    margin-bottom: var(--s4);
   }
 
   .news-list__empty {
