@@ -6,6 +6,7 @@ const routes: { path: string; heading: string }[] = [
   { path: '/about/', heading: 'Russell K. Ryan' },
   { path: '/contact/', heading: 'Start a conversation' },
   { path: '/payment/', heading: 'LawPay' },
+  { path: '/news/', heading: 'News & Announcements' },
 ]
 
 for (const route of routes) {

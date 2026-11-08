@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const routes = ['/', '/about/', '/contact/', '/expertise/', '/payment/']
+const routes = ['/', '/about/', '/contact/', '/expertise/', '/payment/', '/news/']
 
 async function readGraph(page: import('@playwright/test').Page) {
   const raw = await page.locator('script[type="application/ld+json"]').textContent()

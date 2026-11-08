@@ -1,0 +1,272 @@
+---
+import type { GetStaticPaths } from 'astro'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import {
+  newsArticles,
+  newsArticlePath,
+  newsArticleDescription,
+  formatNewsDate,
+  type NewsArticle,
+} from '@/data/news'
+import { webPageJsonLd, legalServiceJsonLd, newsArticleJsonLd } from '@/lib/json-ld'
+
+export const getStaticPaths = (() =>
+  newsArticles.map((article) => ({ params: { slug: article.slug }, props: { article } }))) satisfies GetStaticPaths
+
+interface Props {
+  article: NewsArticle
+}
+
+// Layout: width, padding, and type rhythm follow About's narrow profile
+// column (.about-narrow: --content-narrow); the header follows Russ's
+// profile hierarchy (eyebrow → H1 in the name's role) with Expertise's .lead
+// deck beneath it. Single centered column, so .page-hero handles the <900px
+// centering the same way Privacy/Payment do.
+const { article } = Astro.props
+const path = newsArticlePath(article)
+const description = newsArticleDescription(article)
+const pdfLabel = article.pdfLabel ?? `View original ${article.type.toLowerCase()} (PDF)`
+const articleLd = newsArticleJsonLd(article)
+
+const jsonLd = [
+  legalServiceJsonLd(),
+  articleLd,
+  webPageJsonLd({
+    path,
+    name: article.title,
+    description,
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'News', path: '/news/' },
+      { name: article.title, path },
+    ],
+    mainEntity: [{ '@id': articleLd['@id'] }],
+  }),
+]
+---
+
+<BaseLayout
+  title={article.title}
+  description={description}
+  path={path}
+  jsonLd={jsonLd}
+  social={{
+    title: article.ogTitle ?? article.title,
+    description: article.ogDescription ?? description,
+    image: article.image,
+    type: 'article',
+    publishedTime: article.datePublished,
+    modifiedTime: article.dateModified,
+  }}
+>
+  <div class="page-section page-section--narrow news-article">
+    <nav aria-label="Breadcrumb" class="news-breadcrumb">
+      <ol>
+        <li><a href="/news/">News</a></li>
+        <li><span aria-current="page">{article.title}</span></li>
+      </ol>
+    </nav>
+
+    <article>
+    <header class="page-hero news-article__header">
+      <p class="eyebrow news-article__eyebrow">
+        <span>{article.type}</span>
+        <span class="news-article__sep" aria-hidden="true">·</span>
+        <time class="news-article__date" datetime={article.datePublished}
+          >{formatNewsDate(article.datePublished)}</time
+        >
+      </p>
+      <h1>{article.title}</h1>
+      <p class="lead">{article.summary}</p>
+      {
+        article.dateModified && (
+          <p class="news-article__updated">
+            Updated <time datetime={article.dateModified}>{formatNewsDate(article.dateModified)}</time>
+          </p>
+        )
+      }
+      {
+        article.pdfUrl && (
+          <a href={article.pdfUrl} type="application/pdf" class="link-editorial news-article__pdf">
+            {pdfLabel}<span class="link-editorial__arrow" aria-hidden="true">→</span>
+          </a>
+        )
+      }
+    </header>
+
+    <div class="news-article__body">
+      {
+        article.body.map((block) =>
+          typeof block === 'string' ? (
+            <p>{block}</p>
+          ) : 'heading' in block ? (
+            <h2 class="news-article__subhead">{block.heading}</h2>
+          ) : (
+            <p class="news-article__note">{block.note}</p>
+          ),
+        )
+      }
+      {
+        /* Every item with a PDF repeats the link at the end of the text, so
+           readers who finish the web version don't have to scroll back up.
+           Excerpted items (e.g. a complaint's introduction) add a short note
+           above it pointing to the full document. */
+        article.pdfUrl && (
+          <div class="news-article__continued">
+            {article.excerptNote && <p>{article.excerptNote}</p>}
+            <a href={article.pdfUrl} type="application/pdf" class="link-editorial">
+              {pdfLabel}<span class="link-editorial__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        )
+      }
+    </div>
+
+    <footer class="news-article__footer">
+      <a href="/news/" class="link-editorial news-article__back">
+        <span class="link-editorial__arrow" aria-hidden="true">←</span>Back to News
+      </a>
+    </footer>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .news-breadcrumb {
+    margin-bottom: var(--s6);
+  }
+
+  .news-breadcrumb ol {
+    display: flex;
+    gap: var(--s2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9375rem;
+    color: var(--fg-soft);
+  }
+
+  /* One line only: "News /" never shrinks, and a headline too long for the
+     row truncates with an ellipsis. The full title stays in the DOM, so
+     screen readers still read it in full — and it's the H1 right below. */
+  .news-breadcrumb li {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .news-breadcrumb li + li {
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .news-breadcrumb li + li::before {
+    content: '/' / '';
+    margin-right: var(--s2);
+    color: var(--rule);
+  }
+
+  /* Quiet at rest (soft body color, no underline); the same transparent →
+     gold underline as .link-editorial on hover/focus. */
+  .news-breadcrumb a {
+    color: var(--fg-soft);
+    font-weight: 600;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: calc(0.18em + 1.5px);
+    transition:
+      color var(--transition-fast),
+      text-decoration-color var(--transition-fast);
+  }
+
+  .news-breadcrumb a:hover,
+  .news-breadcrumb a:focus-visible {
+    color: var(--fg);
+    text-decoration-color: var(--gold);
+  }
+
+  /* Same order and colors as the /news/ list's meta line: content type in
+     the eyebrow's gold-ink, date in the soft body color. */
+  .news-article__eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .news-article__sep,
+  .news-article__date {
+    color: var(--fg-soft);
+  }
+
+  .news-article__updated {
+    color: var(--fg-soft);
+    font-size: 0.9375rem;
+  }
+
+  .news-article__pdf {
+    display: inline-block;
+    margin-top: var(--s2);
+  }
+
+  /* A plain hairline between header and body — structural, so it uses the
+     neutral --rule rather than the gold .section-rule mark, which means
+     "a new section begins" elsewhere on the site. */
+  .news-article__body {
+    margin-top: var(--s6);
+    padding-top: var(--s6);
+    border-top: 1px solid var(--rule);
+  }
+
+  .news-article__subhead {
+    font-size: clamp(1.375rem, 1.25rem + 0.5vw, 1.625rem);
+    margin-top: var(--s6);
+  }
+
+  /* Footnote-style text carried over from the source document. */
+  .news-article__note {
+    font-size: 0.9375rem;
+    color: var(--fg-soft);
+  }
+
+  /* Closing pointer to the full PDF when the body is only an excerpt —
+     separated by the same neutral hairline as the header/body break. */
+  .news-article__continued {
+    margin-top: var(--s6);
+    padding-top: var(--s6);
+    border-top: 1px solid var(--rule);
+  }
+
+  .news-article__continued p {
+    color: var(--fg-soft);
+  }
+
+  .news-article__footer {
+    margin-top: var(--s7);
+  }
+
+  /* Leading arrow: flips the global trailing-arrow margin (see
+     .link-editorial__arrow in global.css) to the other side. */
+  .news-article__back .link-editorial__arrow {
+    margin-left: 0;
+    margin-right: 0.3em;
+  }
+
+  /* Left-pointing arrow nudges left, not right, on hover/focus. */
+  .news-article__back:hover .link-editorial__arrow,
+  .news-article__back:focus-visible .link-editorial__arrow {
+    transform: translateX(-3px);
+  }
+
+  @media (max-width: 899px) {
+    .news-breadcrumb ol {
+      justify-content: center;
+    }
+
+    .news-article__eyebrow {
+      justify-content: center;
+    }
+  }
+</style>

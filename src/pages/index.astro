@@ -63,7 +63,7 @@ const proofItems = [
       <div class="hero__actions">
         <a href="/contact/" class="btn btn-primary">Schedule a Consultation</a>
         <a href="/expertise/" class="link-editorial">
-          See areas of practice <span class="link-editorial__arrow" aria-hidden="true">→</span>
+          See areas of practice<span class="link-editorial__arrow" aria-hidden="true">→</span>
         </a>
       </div>
     </div>
@@ -94,10 +94,7 @@ const proofItems = [
           <li class="practice-grid__item">
             <a class="practice-grid__link" href={`/expertise/#${area.slug}`}>
               <h3>
-                {area.name}{' '}
-                <span class="practice-grid__arrow" aria-hidden="true">
-                  →
-                </span>
+                {area.name}<span class="practice-grid__arrow" aria-hidden="true">→</span>
               </h3>
               <p>{area.teaser}</p>
             </a>
@@ -280,6 +277,9 @@ const proofItems = [
   .practice-grid__arrow {
     text-decoration-line: none;
     display: inline-block;
+    /* Gap as a margin, not a text space, so the hover underline stops at
+       the last word (same reasoning as .link-editorial__arrow). */
+    margin-left: 0.3em;
     color: var(--fg-soft);
     transition:
       color var(--transition-fast),

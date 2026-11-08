@@ -564,6 +564,12 @@ summary:focus-visible,
      it's sitting on a line of its own. */
   text-decoration-line: none;
   display: inline-block;
+  /* The gap before a trailing arrow lives here as a margin rather than as a
+     text space in markup — a space character inside the link gets the hover
+     underline too, which reads as a stray underlined gap before the arrow.
+     Markup should butt the label directly against this span. (A leading
+     arrow, e.g. "← Back to News", flips this to margin-right locally.) */
+  margin-left: 0.3em;
   transition: transform var(--transition-fast);
 }
 

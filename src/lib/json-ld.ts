@@ -7,6 +7,7 @@
 import { siteUrl, businessName, defaultDescription, defaultKeywords, contact, address, knowsAbout } from '@/data/site'
 import { ratingsAndDesignations } from '@/data/credentials'
 import { russRyan, crystalBrightwell } from '@/data/people'
+import { newsArticleDescription, newsArticlePath, type NewsArticle } from '@/data/news'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type JsonLd = Record<string, any>
@@ -18,6 +19,7 @@ export type JsonLd = Record<string, any>
 //   people:  `${siteUrl}/about/#<PersonSlug>` (About is their canonical page,
 //            referenced by @id — never redefined — from other pages)
 //   pages:   `${siteUrl}<path>#webpage`
+//   news:    `${siteUrl}/news/<slug>/#article`
 export const firmId = `${siteUrl}#RyanLegalPC`
 export const websiteId = `${siteUrl}/#website`
 export const russRyanId = `${siteUrl}/about/#RussellRyan`
@@ -100,7 +102,7 @@ export function webPageJsonLd(opts: {
   /** Omit for pages that don't warrant a breadcrumb trail (e.g. Home alone). */
   breadcrumbs?: { name: string; path: string }[]
   /** Defaults to 'WebPage'; use a more specific type only where it adds real value. */
-  pageType?: 'WebPage' | 'AboutPage' | 'ContactPage'
+  pageType?: 'WebPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage'
   /** Defaults to the firm entity. Pass an explicit list for pages primarily about specific people. */
   mainEntity?: { '@id': string }[]
   /** Lightweight @id-only references to entities discussed on the page, without redefining them. */
@@ -193,5 +195,30 @@ export function crystalBrightwellPersonJsonLd(): JsonLd {
     description: `${crystalBrightwell.workingTitle}, with ${russRyan.alternateName} for over ${crystalBrightwell.tenureYears} years.`,
     email: contact.emails.crystal,
     worksFor: { '@id': firmId },
+  }
+}
+
+// Press releases/announcements. The firm is both author and publisher — a
+// press release is issued by the organization, not a byline — referenced by
+// @id; pages emitting this also include legalServiceJsonLd() so that @id
+// resolves within the same graph. `image` falls back to the site's existing
+// OG image (Google's Article guidance expects one); `dateModified` falls
+// back to `datePublished`, which is accurate for an unrevised release.
+export function newsArticleJsonLd(article: NewsArticle): JsonLd {
+  const url = `${siteUrl}${newsArticlePath(article)}`
+  return {
+    '@type': 'NewsArticle',
+    '@id': `${url}#article`,
+    url,
+    headline: article.title,
+    description: newsArticleDescription(article),
+    datePublished: article.datePublished,
+    dateModified: article.dateModified ?? article.datePublished,
+    image: `${siteUrl}${article.image ?? '/opengraph-image.png'}`,
+    inLanguage: 'en',
+    mainEntityOfPage: { '@id': `${url}#webpage` },
+    isPartOf: { '@id': websiteId },
+    author: { '@id': firmId },
+    publisher: { '@id': firmId },
   }
 }

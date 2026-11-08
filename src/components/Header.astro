@@ -1,5 +1,5 @@
 ---
-import { businessName, navLinks, contact } from '@/data/site'
+import { businessName, primaryNavLinks, drawerNavLinks } from '@/data/site'
 import ThemeToggle from '@/components/ThemeToggle.astro'
 
 const currentPath = Astro.url.pathname
@@ -17,7 +17,7 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
     <nav aria-label="Primary" class="site-header__nav">
       <ul>
         {
-          navLinks.map((link) => (
+          primaryNavLinks.map((link) => (
             <li>
               <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
                 {link.name}
@@ -29,7 +29,9 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
     </nav>
 
     <div class="site-header__actions">
-      <a href={`tel:${contact.phoneHref}`} class="site-header__phone">{contact.phoneDisplay}</a>
+      <a href="/payment/" class="site-header__utility" aria-current={isCurrent('/payment/') ? 'page' : undefined}
+        >Payment</a
+      >
       <ThemeToggle variant="compact" />
       <a href="/contact/" class="btn btn-primary site-header__cta">
         <span class="site-header__cta-full">Schedule a Consultation</span>
@@ -85,7 +87,7 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
     <nav aria-label="Primary" class="site-header__drawer-nav">
       <ul>
         {
-          navLinks.map((link) => (
+          drawerNavLinks.map((link) => (
             <li>
               <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
                 {link.name}
@@ -206,17 +208,29 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
     flex-shrink: 0;
   }
 
-  .site-header__phone {
-    color: var(--surface-navy-fg-soft);
+  /* Payment: one of the most-visited pages (returning clients), so it gets
+     the exact same treatment as the primary nav links — only its position
+     on the right differs. The gold CTA beside it stays the one dominant
+     action. */
+  .site-header__utility {
+    display: inline-block;
+    padding: 0.35rem 0.1rem;
+    color: var(--surface-navy-fg);
     text-decoration: none;
     font-weight: 600;
     font-size: 0.9375rem;
     white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: border-color var(--transition-fast);
   }
 
-  .site-header__phone:hover,
-  .site-header__phone:focus-visible {
-    color: var(--surface-navy-fg);
+  .site-header__utility:hover,
+  .site-header__utility:focus-visible {
+    border-bottom-color: var(--surface-navy-accent);
+  }
+
+  .site-header__utility[aria-current='page'] {
+    border-bottom-color: var(--gold);
   }
 
   .site-header__cta-short {
@@ -251,7 +265,7 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
     border-radius: 1px;
   }
 
-  /* Wide desktop and laptop (>=1300px): full treatment, phone shown. */
+  /* Wide desktop and laptop (>=1300px): full treatment. */
   @media (min-width: 1300px) {
     .site-header__bar {
       gap: var(--s7);
@@ -259,13 +273,9 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
   }
 
   /* Condensed landscape-tablet / narrow-laptop (900–1299px):
-     reduced spacing, no phone, shortened CTA, all five destinations stay
-     visible without wrapping or colliding. */
+     reduced spacing and a shortened CTA so the nav, Payment, theme control,
+     and CTA all stay visible without wrapping or colliding. */
   @media (max-width: 1299px) {
-    .site-header__phone {
-      display: none;
-    }
-
     .site-header__bar {
       gap: var(--s4);
       padding: var(--s3) var(--s4);

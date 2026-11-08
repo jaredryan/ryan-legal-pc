@@ -4,6 +4,7 @@ Allow: /about
 Allow: /expertise
 Allow: /contact
 Allow: /payment
+Allow: /news
 Allow: /privacy
 
 Sitemap: https://ryanlegalpc.com/sitemap-index.xml

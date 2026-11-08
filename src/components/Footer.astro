@@ -1,5 +1,5 @@
 ---
-import { businessName, navLinks, contact, address } from '@/data/site'
+import { businessName, footerNavLinks, contact, address } from '@/data/site'
 
 interface Props {
   // Removes the footer's top margin so it sits flush against whatever
@@ -35,7 +35,7 @@ const fullAddress = `${address.street}, ${address.suite}, ${address.city}, ${add
     <nav aria-label="Footer">
       <ul>
         {
-          navLinks.map((link) => (
+          footerNavLinks.map((link) => (
             <li>
               <a href={link.href}>{link.name}</a>
             </li>

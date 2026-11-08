@@ -70,10 +70,32 @@ export const address = {
 
 export const lawPayUrl = 'https://secure.lawpay.com/pages/ryanlegalpc/operating'
 
-export const navLinks = [
+// Desktop header: the logo already links Home and the "Schedule a
+// Consultation" CTA already links Contact, so neither is repeated here.
+// Payment lives in the header's right-side utility area instead (see
+// Header.astro), visually quieter than the CTA.
+export const primaryNavLinks = [
+  { name: 'Expertise', href: '/expertise/' },
+  { name: 'About', href: '/about/' },
+  { name: 'News', href: '/news/' },
+] as const
+
+// Mobile drawer: Home stays explicit here even though the drawer's logo
+// also links home; Contact is covered by the drawer's consultation CTA.
+export const drawerNavLinks = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about/' },
   { name: 'Expertise', href: '/expertise/' },
+  { name: 'News', href: '/news/' },
+  { name: 'Payment', href: '/payment/' },
+] as const
+
+// Footer keeps the complete sitemap-style list, Contact included.
+export const footerNavLinks = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about/' },
+  { name: 'Expertise', href: '/expertise/' },
+  { name: 'News', href: '/news/' },
   { name: 'Contact', href: '/contact/' },
   { name: 'Payment', href: '/payment/' },
 ] as const

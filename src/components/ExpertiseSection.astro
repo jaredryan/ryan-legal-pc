@@ -62,10 +62,7 @@ function withItalicizedCases(content: string, citedCases: string[] | undefined) 
             <span class="proof-callout__label">{area.proof.label}</span>
             <p class="proof-callout__body">{area.proof.body}</p>
             <a href={area.proof.linkHref} class="link-editorial">
-              {area.proof.linkLabel}{' '}
-              <span class="link-editorial__arrow" aria-hidden="true">
-                →
-              </span>
+              {area.proof.linkLabel}<span class="link-editorial__arrow" aria-hidden="true">→</span>
             </a>
           </div>
         )}
