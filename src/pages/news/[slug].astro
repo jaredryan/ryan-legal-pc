@@ -99,6 +99,8 @@ const jsonLd = [
         article.body.map((block) =>
           typeof block === 'string' ? (
             <p>{block}</p>
+          ) : 'html' in block ? (
+            <p set:html={block.html} />
           ) : 'heading' in block ? (
             <h2 class="news-article__subhead">{block.heading}</h2>
           ) : (
