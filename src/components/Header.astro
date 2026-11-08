@@ -29,10 +29,25 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
     </nav>
 
     <div class="site-header__actions">
-      <a href="/payment/" class="site-header__utility" aria-current={isCurrent('/payment/') ? 'page' : undefined}
-        >Payment</a
-      >
       <ThemeToggle variant="compact" />
+      <a href="/payment/" class="site-header__utility" aria-current={isCurrent('/payment/') ? 'page' : undefined}>
+        <svg
+          class="site-header__utility-icon"
+          viewBox="0 0 24 24"
+          width="16"
+          height="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+          <path d="M2 10h20"></path>
+        </svg>
+        Payment
+      </a>
       <a href="/contact/" class="btn btn-primary site-header__cta">
         <span class="site-header__cta-full">Schedule a Consultation</span>
         <span class="site-header__cta-short">Consultation</span>
@@ -209,11 +224,13 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
   }
 
   /* Payment: one of the most-visited pages (returning clients), so it gets
-     the exact same treatment as the primary nav links — only its position
-     on the right differs. The gold CTA beside it stays the one dominant
-     action. */
+     the same type treatment as the primary nav links. The card icon and its
+     position on the right mark it as a utility rather than a page link; the
+     gold CTA beside it stays the one dominant action. */
   .site-header__utility {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     padding: 0.35rem 0.1rem;
     color: var(--surface-navy-fg);
     text-decoration: none;
@@ -231,6 +248,10 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
 
   .site-header__utility[aria-current='page'] {
     border-bottom-color: var(--gold);
+  }
+
+  .site-header__utility-icon {
+    flex-shrink: 0;
   }
 
   .site-header__cta-short {
